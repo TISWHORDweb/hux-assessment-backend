@@ -62,8 +62,8 @@ exports.authRegister = useAsync(async (req, res, next) => {
         //create data if all data available
         const schema = Joi.object({
             email: Joi.string().email({ minDomainSegments: 2 }).required(),
-            fullname: Joi.string().min(3).max(150).required(),
-            password: Joi.string().min(6).max(12).required()
+            fullname: Joi.string(),
+            password: Joi.string().min(6).max(30).required()
         })
         //validate user
         const value = await schema.validateAsync(req.body);
@@ -77,7 +77,7 @@ exports.authRegister = useAsync(async (req, res, next) => {
         //indicate if the user is newx
         let newUser = JSON.parse(JSON.stringify(user));
         newUser['created'] = created;
-        res.json(utils.JParser("ok-registration is successful", true, newUser));
+        res.json(utils.JParser("Congratulation registration is successful", true, newUser));
 
     } catch (e) {
         throw new errorHandle(e.message, 202);
