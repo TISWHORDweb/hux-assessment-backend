@@ -4,7 +4,7 @@
  */
 const sequelize = require('./../database');
 const {DataTypes, Model} = require('sequelize');
-const tableName = "scriipo_users";
+const tableName = " reach_users";
 /**
  * Model extending sequelize model class
  */

@@ -76,10 +76,10 @@ exports.authRegister = useAsync(async (req, res, next) => {
             return;
             new emailTemple(user.email)
                 .who(user.fullname)
-                .body("Welcome to scriipo academy 2022 where you can learn, master and earn conveniently. " +
-                    "Welcome to scriipo academy where you can learn, master and earn conveniently. " +
-                    "Welcome to scriipo academy where you can learn, master and earn conveniently. " +
-                    "Welcome to scriipo academy where you can learn, master and earn conveniently. ")
+                .body("Welcome to  reach academy 2022 where you can learn, master and earn conveniently. " +
+                    "Welcome to  reach academy where you can learn, master and earn conveniently. " +
+                    "Welcome to  reach academy where you can learn, master and earn conveniently. " +
+                    "Welcome to  reach academy where you can learn, master and earn conveniently. ")
                 .subject(etpl.WelcomeEmail).send().then(r => console.log(r));
         }
     } catch (e) {

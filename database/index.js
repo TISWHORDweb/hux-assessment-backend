@@ -30,7 +30,7 @@ const dbConn = new Sequelize(DATABASE_NAME, DATABASE_USER, DATABASE_PASS, {
     dialect: DATABASE_LANG,
     logging: (e) => {
         //write to log file here...
-        //console.log(e);
+        // console.log(e);
     },
 });
 module.exports = dbConn;
