@@ -1,15 +1,17 @@
- 
+
 const sha1 = require('sha1');
 const Joi = require('joi');
+const bcrypt = require('bcryptjs')
+const jwt = require("jsonwebtoken")
+const CryptoJS = require("crypto-js")
 /**
  * importing custom model
  */
-const {useAsync, utils, errorHandle,} = require('./../core');
-const {emailTemple, etpl} = require('./../services');
+const { useAsync, utils, errorHandle, } = require('./../core');
 /**
  * importing models
  */
-const {ModelUser} = require('./../models');
+const { ModelUser } = require('./../models');
 /**
  * @type {function(*=, *=, *=): Promise<unknown>}
  */
@@ -24,17 +26,28 @@ exports.authLogin = useAsync(async (req, res, next) => {
     try {
         //create data if all data available
         const schema = Joi.object({
-            email: Joi.string().email({minDomainSegments: 2}).required(),
+            email: Joi.string().email({ minDomainSegments: 2 }).required(),
             password: Joi.string().min(6).max(12).required()
         })
         //capture user data
-        const {email, password} = req.body;
+        const { email, password } = req.body;
         //validate user
-        const validator = await schema.validateAsync({email, password});
-        //hash password before checking
-        validator.password = sha1(validator.password);
-        const user = await ModelUser.findOne({where: validator});
-        res.json(utils.JParser("ok-response", !!user, user));
+        const validator = await schema.validateAsync({ email, password });
+        const user = await ModelUser.findOne({ where: { email: validator.email } })
+        if (user) {
+            //hash password before checking
+            const originalPassword = await bcrypt.compare(req.body.password, user.password);
+            if(!originalPassword){
+                return res.json(utils.JParser('Invalid credentials verify your email and password and try again', false, []));
+            }else {
+                const lastLogin = CryptoJS.AES.encrypt(JSON.stringify(new Date()), process.env.SECRETKEY).toString()
+                const token = jwt.sign({ email, uid: user.uid }, process.env.SECRETKEY, { expiresIn: '1d' })
+                await user.update({ token, lastLogin}).then(() => {
+                    user.password = "********************************"
+                    return res.json(utils.JParser('logged in successfuly', true, user));
+                })
+            }
+        }
     } catch (e) {
         throw new errorHandle(e.message, 202);
     }
@@ -48,15 +61,17 @@ exports.authRegister = useAsync(async (req, res, next) => {
     try {
         //create data if all data available
         const schema = Joi.object({
-            email: Joi.string().email({minDomainSegments: 2}).required(),
+            email: Joi.string().email({ minDomainSegments: 2 }).required(),
             fullname: Joi.string().min(3).max(150).required(),
             password: Joi.string().min(6).max(12).required()
         })
         //validate user
         const value = await schema.validateAsync(req.body);
+        //rebuild user object
+        value.password = await bcrypt.hash(req.body.password, 13)
         //insert into db
         const [user, created] = await ModelUser.findOrCreate({
-            where: {email: value.email},
+            where: { email: value.email },
             defaults: value
         });
         //indicate if the user is newx
@@ -64,44 +79,6 @@ exports.authRegister = useAsync(async (req, res, next) => {
         newUser['created'] = created;
         res.json(utils.JParser("ok-registration is successful", true, newUser));
 
-    } catch (e) {
-        throw new errorHandle(e.message, 202);
-    }
-});
-
-/**
- * @route-controller /api/v1/auth/reset
- * @type {function(*=, *=, *=): Promise<unknown>}
- */
-exports.authReset = useAsync(async (req, res, next) => {
-    try {
-        //create data if all data available
-        const schema = Joi.object({
-            email: Joi.string().email({minDomainSegments: 2}).required(),
-        })
-        //capture user data
-        const {email} = req.body;
-        //validate user
-        const validator = await schema.validateAsync({email});
-        //hash password before checking
-        const newPass = utils.AsciiCodes(8);
-        const user = await ModelUser.findOne({where: validator});
-        if (user) {
-            const uuser = user.update({password: sha1(newPass), token: sha1(user.email + new Date().toUTCString)});
-            if (uuser) {
-                /**
-                 * Change email template before productions
-                 */
-                new emailTemple(user.email)
-                    .who(user.fullname)
-                    .body("You requested for a password reset<br/>" +
-                        "A new password has been generated for you, do login and change it immediately" +
-                        "<h1 style='margin-top: 10px; margin-bottom: 10px;'>" +newPass+"</h1>"+
-                        "Check out our new courses.")
-                    .subject(etpl.PasswordReset).send().then(r => console.log(r));
-            }
-        }
-        res.json(utils.JParser("ok-response", !!user, user));
     } catch (e) {
         throw new errorHandle(e.message, 202);
     }

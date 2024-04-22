@@ -12,7 +12,6 @@ const {index, authLogin, authRegister, authReset} = require('./../controllers/co
 router.get('/', index);
 router.post('/login', bodyParser, authLogin);
 router.post('/register', bodyParser, authRegister);
-router.post('/reset', bodyParser, authReset);
 /**
  * Export lastly
  */
