@@ -54,10 +54,6 @@ exports.authRegister = useAsync(async (req, res, next) => {
         })
         //validate user
         const value = await schema.validateAsync(req.body);
-        //rebuild user object
-        value.apiKey = sha1(value.email + new Date().toISOString);
-        value.token = sha1(value.email + new Date().toISOString)
-        value.password = sha1(value.password);
         //insert into db
         const [user, created] = await ModelUser.findOrCreate({
             where: {email: value.email},
@@ -67,21 +63,7 @@ exports.authRegister = useAsync(async (req, res, next) => {
         let newUser = JSON.parse(JSON.stringify(user));
         newUser['created'] = created;
         res.json(utils.JParser("ok-registration is successful", true, newUser));
-        console.log(created);
-        //send a welcome email here
-        if (created) {
-            /**
-             * Change email template before productions
-             */
-            return;
-            new emailTemple(user.email)
-                .who(user.fullname)
-                .body("Welcome to  reach academy 2022 where you can learn, master and earn conveniently. " +
-                    "Welcome to  reach academy where you can learn, master and earn conveniently. " +
-                    "Welcome to  reach academy where you can learn, master and earn conveniently. " +
-                    "Welcome to  reach academy where you can learn, master and earn conveniently. ")
-                .subject(etpl.WelcomeEmail).send().then(r => console.log(r));
-        }
+
     } catch (e) {
         throw new errorHandle(e.message, 202);
     }

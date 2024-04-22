@@ -17,12 +17,8 @@ ModelUser.init({
     password: {type: DataTypes.STRING, allowNull: false},
     fullname: {type: DataTypes.STRING, allowNull: false},
     phone: {type: DataTypes.STRING, allowNull: true},
-    country: {type: DataTypes.STRING, allowNull: true},
-    balance: {type: DataTypes.INTEGER, allowNull: true, defaultValue: 0},
-    status: {type: DataTypes.BOOLEAN, defaultValue: false},
-    apiKey: {type: DataTypes.STRING, allowNull: true, unique: true},
+    blocked: {type: DataTypes.BOOLEAN, defaultValue: false},
     token: {type: DataTypes.STRING, allowNull: true, unique: true},
-    whoIs: {type: DataTypes.INTEGER, defaultValue: 0},
 }, {sequelize, tableName});
 /**
  * Run belonging and relationship before sync()
