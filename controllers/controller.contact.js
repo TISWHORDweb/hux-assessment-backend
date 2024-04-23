@@ -107,7 +107,7 @@ exports.allContact = useAsync(async (req, res) => {
 
 exports.deleteContact = useAsync(async (req, res) => {
     try {
-        const cid = req.body.id
+        const cid = req.params.id
         if (!cid) return res.status(402).json(utils.JParser('provide the patient id', false, []));
         const option = {
             where: { cid }

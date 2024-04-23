@@ -12,7 +12,7 @@ router.get('/details', bodyGuard, getUser);
 //CONTACT ROUTES
 router.post('/contact/create', bodyGuard, createContact);
 router.put('/contact/edit', bodyGuard, editContact);
-router.delete('/contact/delete', bodyGuard, deleteContact);
+router.delete('/contact/delete/:id', bodyGuard, deleteContact);
 router.get('/contact/all', bodyGuard, allContact);
 router.get('/contact/:id', bodyGuard, getSingleContact);
 

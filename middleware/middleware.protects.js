@@ -35,6 +35,6 @@ exports.bodyGuard = useAsync(async (req, res, next) => {
         req.userEmail = isValid.email
         next()
     } else {
-        return res.status(400).json(utils.JParser("Invalid x-token code or token, Use a valid token and try again", false, []));
+        return res.status(400).json(utils.JParser("Invalid token code or token, Use a valid token and try again", false, []));
     }
 })
