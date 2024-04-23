@@ -133,7 +133,7 @@
                                         <li style="display: inline-block; list-style: none; padding: 4px;"><a style="display: inline-block; height: 30px; width:30px;border-radius: 50%; background-color: #ffffff" href="https://www.linkedin.com/in/ reach-limited-aa2815246" target="_blank"><img style="width: 30px" src="https://i.im.ge/2022/07/27/Fi1Aeq.png" alt="brand"></a></li>
                                         <li style="display: none; list-style: none; padding: 4px;"><a style="display: inline-block; height: 30px; width:30px;border-radius: 50%; background-color: #ffffff" href="#" target="_blank"><img style="width: 30px" src="https://i.im.ge/2022/07/24/FDEjhF.png" alt="brand"></a></li>
                                     </ul>
-                                    <p style="padding-top: 15px; font-size: 10px;"><a style="color: #8094ae; text-decoration:none;" href="https://slantapp.com">SlanRetApp &#8482; Technologies</a></p>
+                                    <p style="padding-top: 15px; font-size: 10px;"><a style="color: #8094ae; text-decoration:none;" href="https://reachapp.com">SlanRetApp &#8482; Technologies</a></p>
                                 </td>
                             </tr>
                         </tbody>
